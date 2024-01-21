@@ -11,7 +11,7 @@ def input_students():
     st_infor = {}    #Create dictionary for information set
     st_infor["Student ID"] = input("Student ID: ")
     st_infor["Full name"] = input("Full name: ")
-    st_infor["DoB"] = input("Date of birth: ")
+    st_infor["DoB"] = input("Date of birth (day/month/year): ")
     return st_infor
 
 
@@ -23,21 +23,24 @@ def input_course():
 
 
 def show_students(students_list, number_student):
+    print("------------------------------------")
     if len(students_list) == 0:     # if the list is empty
         print("The student list is empty")
     else:
         print("Student list:")
         for i in range(number_student):
-            print(f"{i + 1}, {students_list[i]}")
-
+            print(f"{i + 1} | ID: {students_list[i]['Student ID']} | FULL NAME: {students_list[i]['Full name']} | DATE OF BIRTH: {students_list[i]['DoB']} |")
+    print("------------------------------------")
 
 def show_courses(courses_list, number_course):
+    print("------------------------------------")
     if len(courses_list) == 0:      # if the list is empty
         print("The course list is empty")
     else:
         print("Course list: ")
         for i in range(number_course):
-            print(f"{i + 1}. {courses_list[i]}")
+            print(f"{i + 1} | COURSE ID: {courses_list[i]['Course ID']} | COURSE NAME: {courses_list[i]['Course name']}")
+    print("------------------------------------")
 
 def assign_students(students_list):
     print("input assigned student ")
@@ -66,35 +69,44 @@ def choose_course(courses_list,number_course, students_list, course_student):
     if choose > len(courses_list):
         print('Invalid course')
     else:
-        course_student[choose-1] = assign_students(students_list)
+        course_student[choose-1].extend(assign_students(students_list))
+        for i in range (len(course_student[choose-1])):
+            course_student[choose-1][i][f"Mark_{courses_list[choose-1]['Course name']}"] = None
+
 
 def show_course_student(courses_list,number_course, course_student):
     show_courses(courses_list, number_course)   
     choose = int(input("Choose course: "))
-    if choose > len(courses_list):
+    if choose > len(courses_list) and choose < 1:
         print('Invalid course')
     else:
+        print('Student in course:')
         for i in range (len(course_student[choose-1])):
-            print(f"{i+1}. {course_student[choose-1][i]}")
+            print(f"{i+1} | ID: {course_student[choose-1][i]['Student ID']} | FULL NAME: {course_student[choose-1][i]['Full name']} | DATE OF BIRTH: {course_student[choose-1][i]['DoB']} |")
+
 
 def input_mark(course_student, courses_list, number_course):
     show_courses(courses_list,number_course)
     choose = int(input("Choose the course to input: "))
-    if choose > len(courses_list):
+    if choose > len(courses_list) and choose < 1:
         print('Invalid course')
     else:
-        if course_student[choose-1] == None:
+        if len(course_student[choose-1]) == 0:
             print("No student in the course")
         else:
-            print(course_student[choose-1])
+            for i in range (len(course_student[choose-1])):
+                if course_student[choose-1][i][f"Mark_{courses_list[choose-1]['Course name']}"] == None:
+                    print(f"{i+1} | ID: {course_student[choose-1][i]['Student ID']} | FULL NAME: {course_student[choose-1][i]['Full name']} | DATE OF BIRTH: {course_student[choose-1][i]['DoB']} |")
+                else:
+                    print(f"""{i+1} | ID: {course_student[choose-1][i]['Student ID']} | FULL NAME: {course_student[choose-1][i]['Full name']} | DATE OF BIRTH: {course_student[choose-1][i]['DoB']} | {f"Mark_{courses_list[choose-1]['Course name']}"}: {course_student[choose-1][i][f"Mark_{courses_list[choose-1]['Course name']}"]}""")
+
             choose_student =input("input for student (Student ID): ")
             exist = False   
             for i in range (len(course_student[choose-1])):
                 if choose_student == course_student[choose-1][i]['Student ID']:
                     exist = True
-                    mark = input("Mark: ")
-                    course_student[choose-1][i][f'Mark_{courses_list[choose-1]["Course name"]}'] = mark
-                    #print(course_student[choose-1])
+                    mark = float(input("Mark: "))
+                    course_student[choose-1][i][f"Mark_{courses_list[choose-1]['Course name']}"] = mark
             if exist == False:
                 print(f"ID {choose_student} does not exist")
 
@@ -102,11 +114,18 @@ def input_mark(course_student, courses_list, number_course):
 def show_course_mark(course_student,courses_list, number_course):
     show_courses(courses_list,number_course)
     choose = int(input("Choose course: "))
-    if choose > len(courses_list):
+    if choose > len(courses_list) and choose < 1:
         print('Invalid course')
     else:
-        for i in range (len(course_student[choose-1])):
-            print(f"{i+1}. {course_student[choose-1][i]}")
+        if len(course_student[choose-1]) != 0:           
+            for i in range (len(course_student[choose-1])):
+                if course_student[choose-1][i][f"Mark_{courses_list[choose-1]['Course name']}"] != None:
+                    print(f"""{i+1} | ID: {course_student[choose-1][i]['Student ID']} | FULL NAME: {course_student[choose-1][i]['Full name']} | {f"Mark_{courses_list[choose-1]['Course name']}"}: {course_student[choose-1][i][f"Mark_{courses_list[choose-1]['Course name']}"]}""")
+                else:
+                     print(f"""{i+1} | ID: {course_student[choose-1][i]['Student ID']} | FULL NAME: {course_student[choose-1][i]['Full name']} | {f"Mark_{courses_list[choose-1]['Course name']}"}: No input | """)
+
+        else:
+            print("No student in the course")
 
 
 
@@ -124,7 +143,8 @@ def main():
     
     #input number of course
     number_course = number_courses()
-    course_student = [None] * number_course
+    #course_student = [None] * number_course
+    course_student = [[] for _ in range(number_course)]
     #input courses information
     for _ in range (number_course):
         courses_list.append(input_course())
@@ -132,8 +152,13 @@ def main():
     choose_course(courses_list,number_course, students_list, course_student)
     choose_course(courses_list,number_course, students_list, course_student)
     show_course_student(courses_list,number_course, course_student)
+    choose_course(courses_list,number_course, students_list, course_student)
+    show_course_student(courses_list,number_course, course_student)
     input_mark(course_student, courses_list, number_course)
     input_mark(course_student, courses_list, number_course)
+    input_mark(course_student, courses_list, number_course)
+    show_course_student(courses_list,number_course, course_student)
+    show_course_mark(course_student,courses_list, number_course)
     show_course_mark(course_student,courses_list, number_course)
 
         

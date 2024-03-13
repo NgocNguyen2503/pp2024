@@ -11,7 +11,7 @@ def main():
         print("1. Input student information (ID, name, DoB)")
         print("2. Input courses information (ID, course name)")
         print("3. Assign students to courses")
-        print("4. input student mark in course")
+        print("4. input student mark for courses")
         print("5. print student list")
         print("6. print course list")
         print("7. print list student in each course")
@@ -96,10 +96,16 @@ def main():
         elif choose == '9':
             print("\n--------------------------")
             print("Calculate student result")
+            print("---------------------------")
             show_gpa(u.student_list,u.course_list)
+            print("---------------------------")
         
         elif choose == '10':
+            print("\n--------------------------")
+            print("Sorting gpa by decending order")
+            print("---------------------------")
             sorting_gpa(u.student_list,u.course_list)
+            print("---------------------------")
       
         else:
             print("\n---------------------------")

@@ -74,7 +74,6 @@ def sorting_gpa(student_list,course_list):
         if len(student_list) == 0 or len(course_list) == 0:
             print("Please input information for students and courses")
         else:
-            print("Sorting gpa by decending order")
             student_sort= sorted(student_list, key=lambda student: student.gpa_cal(), reverse = True)
             for i in student_sort:
                 print(f"| ID: {i.getId()} | FULL NAME: {i.getName()} | DoB: {i.getDob()} | GPA: {i.gpa_cal()} | INCLUDING: {i.course_joining()}")

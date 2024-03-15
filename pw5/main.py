@@ -1,10 +1,17 @@
-from input import  number_students, number_courses, input_student, input_course, choose_course, input_mark, write_course, write_mark, write_student
+from input import  number_students, number_courses, input_student, input_course, choose_course, input_mark, write_courses, write_mark, write_students,compress_files,decompress_files
 from output import show_students, show_courses, show_course_student, show_mark, show_gpa, sorting_gpa
 from domain.university import University
 
 def main():
     u = University()
-
+    decompress = input("Decompress student.dat (y/n)?")
+    if decompress == "y":
+        try:
+            decompress_files(u.student_list,u.course_list)
+            print("Decompress and load successful")
+            u.course_student = [[] for _ in range(len(u.course_list))]
+        except FileNotFoundError:
+            print("Student.dat does not exist")
     while True:
         print("\n________________OPTIONS_________________")
         print("0. Close the program")
@@ -21,10 +28,10 @@ def main():
 
         choose = input("Option: ")
         if choose == '0':
-            write_student(u.student_list)
-            write_course(u.course_list)
+            write_students(u.student_list)
+            write_courses(u.course_list)
             write_mark(u.student_list)
-
+            compress_files()
             break
 
         elif choose == '1':
@@ -46,7 +53,7 @@ def main():
             print("\n---------------------------")
             number_course = number_courses()
             print("---------------------------")
-            u.course_student = [[] for _ in range(number_course)]
+            u.course_student = [[] for _ in range(len(u.course_list))]
             print("\n---------------------------")
             print("Input course information: ")
             if number_course == None:
@@ -81,6 +88,7 @@ def main():
             print("\n---------------------------")
             print("Print course list")
             show_courses(u.course_list)
+            print(len(u.course_list))
             print("---------------------------")
         
         elif choose == '7':
